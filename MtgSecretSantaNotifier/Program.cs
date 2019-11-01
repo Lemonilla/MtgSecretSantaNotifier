@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MtgSecretSantaNotifier
 {
-    class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
@@ -40,6 +40,11 @@ namespace MtgSecretSantaNotifier
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Loads a list of people into memory.  This file has strict formatting requirements defined in the README.
+        /// </summary>
+        /// <param name="filename">Path to file</param>
+        /// <returns></returns>
         private static List<Person> loadFile(string filename)
         {
             int rows = 0;
@@ -73,8 +78,12 @@ namespace MtgSecretSantaNotifier
             }
         }
 
-
-        private static string buildMessageBody(Person person)
+        /// <summary>
+        /// Builds the body of the email to be sent to the Gifter
+        /// </summary>
+        /// <param name="giftee">The person who will receive the gift</param>
+        /// <returns></returns>
+        private static string buildMessageBody(Person giftee)
         {
             string AttributesToSendToGifter = ConfigurationManager.AppSettings["AttributesToSendToGifter"];
             char AttributesToSendDelimiter = ConfigurationManager.AppSettings["AttributesToSendDelimiter"][0]; ;
@@ -84,7 +93,7 @@ namespace MtgSecretSantaNotifier
             foreach(var attr in AttributesToSendToGifter.Split(AttributesToSendDelimiter))
             {
                 var header = ConfigurationManager.AppSettings["AttributeHeader_" + attr];
-                var line = header + ":\t" + person[attr];
+                var line = header + ":\t" + giftee[attr];
                 sb.AppendLine(line);
             }
             sb.AppendLine();
@@ -93,8 +102,14 @@ namespace MtgSecretSantaNotifier
             return sb.ToString();
         }
 
-
-
+        /// <summary>
+        /// Sends an email.
+        /// </summary>
+        /// <param name="from">Email Address to list as the From Address</param>
+        /// <param name="to">Email Address to send the email to</param>
+        /// <param name="subject">String to put in the subject line</param>
+        /// <param name="body">Body text of the email</param>
+        /// <returns></returns>
         private static bool sendEmail(string from, string to, string subject, string body)
         {
             try
@@ -112,6 +127,10 @@ namespace MtgSecretSantaNotifier
             return true;
         }
 
+        /// <summary>
+        /// Logs a message to both the console and the error log file
+        /// </summary>
+        /// <param name="message">Message to log</param>
         private static void LogToConsole(string message)
         {
             Console.WriteLine(message);
