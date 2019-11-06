@@ -22,7 +22,7 @@ namespace MtgSecretSantaNotifier
         public const int Address = 5;
         public const int City = 6;
         public const int State = 7;
-        public const int ZipCode = 8;
+        public const int Zipcode = 8;
         public const int Country = 9;
         public const int Country2 = 10;
         public const int ContactMeathod = 11;
@@ -56,48 +56,48 @@ namespace MtgSecretSantaNotifier
         
         public static object GetRowToken(string propertyName)
         {
-            return AttributeList.Where(x => x.Item1 == propertyName).FirstOrDefault()?.Item2;
+            return AttributeList.Where(x => x.Name == propertyName).FirstOrDefault()?.Row;
         }
-
-        public static readonly List<Tuple<String,int>> AttributeList = new List<Tuple<String, int>>()
+        
+        public static readonly List<Attribute> AttributeList = new List<Attribute>()
         {
-            new Tuple<string,int>("Id",0 ),
-            new Tuple<string,int>("GifterId",1),
-            new Tuple<string,int>("Email",2),
-            new Tuple<string,int>("RedditName",3),
-            new Tuple<string,int>("Name",4),
-            new Tuple<string,int>("Address",5),
-            new Tuple<string,int>("City",6),
-            new Tuple<string,int>("State",7),
-            new Tuple<string,int>("ZipCode",8),
-            new Tuple<string,int>("Country",9),
-            new Tuple<string,int>("Country2",10),
-            new Tuple<string,int>("ContactMeathod",11),
-            new Tuple<string,int>("MilitaryStatus",12),
-            new Tuple<string,int>("NewPlayerStatus",13),
-            new Tuple<string,int>("ShirtSize",14),
-            new Tuple<string,int>("CurrentDecksPlayed",15),
-            new Tuple<string,int>("PlayerProfile",16),
-            new Tuple<string,int>("Commander",17),
-            new Tuple<string,int>("FavoriteColors",18),
-            new Tuple<string,int>("FavoriteCharacter",19),
-            new Tuple<string,int>("PreferredSleeveColorBrand",20),
-            new Tuple<string,int>("FavoriteArtist",21),
-            new Tuple<string,int>("CardVersionPreferrences",22),
-            new Tuple<string,int>("FavoriteDraftFormat",23),
-            new Tuple<string,int>("FavoriteSet",24),
-            new Tuple<string,int>("MostUsedTokens",25),
-            new Tuple<string,int>("WhiteWhale",26),
-            new Tuple<string,int>("Projects",27),
-            new Tuple<string,int>("SoughtSingles",28),
-            new Tuple<string,int>("HomemadeGiftsBoolean",29),
-            new Tuple<string,int>("WhatNotToGet",30),
-            new Tuple<string,int>("AdditionalRequests",31),
-            new Tuple<string,int>("OtherInterests",32),
-            new Tuple<string,int>("ShipOutOfCountry",33),
-            new Tuple<string,int>("GifteePreferrencesBoolean",34),
-            new Tuple<string,int>("GifteePreferrencesString",35),
-            new Tuple<string,int>("VolunteerGifterBoolean",36),
+            new Attribute("Id",0 ),
+            new Attribute("GifterId",1),
+            new Attribute("Email",2),
+            new Attribute("RedditName",3),
+            new Attribute("Name",4),
+            new Attribute("Address",5),
+            new Attribute("City",6),
+            new Attribute("State",7),
+            new Attribute("Zipcode",8),
+            new Attribute("Country",9),
+            new Attribute("Country2",10),
+            new Attribute("ContactMeathod",11),
+            new Attribute("MilitaryStatus",12),
+            new Attribute("NewPlayerStatus",13),
+            new Attribute("ShirtSize",14),
+            new Attribute("CurrentDecksPlayed",15),
+            new Attribute("PlayerProfile",16),
+            new Attribute("Commander",17),
+            new Attribute("FavoriteColors",18),
+            new Attribute("FavoriteCharacter",19),
+            new Attribute("PreferredSleeveColorBrand",20),
+            new Attribute("FavoriteArtist",21),
+            new Attribute("CardVersionPreferrences",22),
+            new Attribute("FavoriteDraftFormat",23),
+            new Attribute("FavoriteSet",24),
+            new Attribute("MostUsedTokens",25),
+            new Attribute("WhiteWhale",26),
+            new Attribute("Projects",27),
+            new Attribute("SoughtSingles",28),
+            new Attribute("HomemadeGiftsBoolean",29),
+            new Attribute("WhatNotToGet",30),
+            new Attribute("AdditionalRequests",31),
+            new Attribute("OtherInterests",32),
+            new Attribute("ShipOutOfCountry",33),
+            new Attribute("GifteePreferrencesBoolean",34),
+            new Attribute("GifteePreferrencesString",35),
+            new Attribute("VolunteerGifterBoolean",36),
         };
     }
 }

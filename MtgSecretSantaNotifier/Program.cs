@@ -64,7 +64,7 @@ namespace MtgSecretSantaNotifier
                         var person = new Person();
                         foreach(var tuple in RowToken.AttributeList)
                         {
-                            person[tuple.Item1] = csv.GetField(tuple.Item2);
+                            person[tuple.Name] = csv.GetField(tuple.Row);
                         }
                         people.Add(person);
                     }
@@ -85,21 +85,13 @@ namespace MtgSecretSantaNotifier
         /// <returns></returns>
         private static string buildMessageBody(Person giftee)
         {
-            string AttributesToSendToGifter = ConfigurationManager.AppSettings["AttributesToSendToGifter"];
-            char AttributesToSendDelimiter = ConfigurationManager.AppSettings["AttributesToSendDelimiter"][0]; ;
-            var sb = new StringBuilder();
-            sb.AppendLine(ConfigurationManager.AppSettings["EmailBodyIntroduction"]);
-            sb.AppendLine();
-            foreach(var attr in AttributesToSendToGifter.Split(AttributesToSendDelimiter))
+            string body = ConfigurationManager.AppSettings["EmailBodyTemplate"];
+            foreach(var attr in RowToken.AttributeList)
             {
-                var header = ConfigurationManager.AppSettings["AttributeHeader_" + attr];
-                var line = header + ":\t" + giftee[attr];
-                sb.AppendLine(line);
+                string searchPattern = "${" + attr.Name + "}";
+                body = body.Replace(searchPattern, (string)giftee[attr.Name]);
             }
-            sb.AppendLine();
-            sb.AppendLine(ConfigurationManager.AppSettings["EmailBodyConclusion"]);
-
-            return sb.ToString();
+            return body;
         }
 
         /// <summary>
@@ -117,6 +109,7 @@ namespace MtgSecretSantaNotifier
                 var message = new MailMessage(from, to);
                 message.Subject = subject;
                 message.Body = body;
+                message.IsBodyHtml = true;
                 var client = new SmtpClient();
                 client.Send(message);
             } catch (Exception e)
@@ -134,7 +127,7 @@ namespace MtgSecretSantaNotifier
         private static void LogToConsole(string message)
         {
             Console.WriteLine(message);
-            var dateString = DateTime.Now.Year.ToString("M2") + DateTime.Now.Month.ToString("M2") + DateTime.Now.Day.ToString("M2");
+            var dateString = DateTime.Now.Year.ToString("N2") + DateTime.Now.Month.ToString("N2") + DateTime.Now.Day.ToString("N2");
             var logFileName = ConfigurationManager.AppSettings["LogFileNamePrefix"] + "_" + dateString + ".txt"; 
             try
             {
