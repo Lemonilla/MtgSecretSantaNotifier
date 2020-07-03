@@ -8,8 +8,9 @@ namespace MtgSecretSantaNotifier
 {
     public class Attribute
     {
-        public string Name { get; set; }
-        public int Row { get; set; }
-        public Attribute(string name, int row) { this.Name = name; this.Row = row; }
+        public string Name { get; }
+        public int Index { get; }
+        public string Value { get; }
+        public Attribute(string name, int row, string value = null) { this.Name = name; this.Index = row; this.Value = value; }
     }
 }
