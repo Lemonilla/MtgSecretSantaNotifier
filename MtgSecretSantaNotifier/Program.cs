@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Web;
 
 namespace MtgSecretSantaNotifier
 {
@@ -28,16 +29,18 @@ namespace MtgSecretSantaNotifier
             // if we didn't run into any errors
             if (service.Users.Count() > 0)
             {
-                // send emails
+                // loop through the users
+                // for each user send an email to their gifter based on their info
                 foreach(var user in service.Users)
                 {
-                    var gifter = service.GetGifter(user.GetAttributeValue(gifterIdAttrName));
+                    var gifterId = user.GetAttributeValue(gifterIdAttrName);
+                    var gifter = service.GetUserById(gifterId);
                         
                     if (gifter != null)
                     {
-                        string body = buildMessageBody(gifter);
+                        string body = buildMessageBody(user,gifter);
                         var success = sendEmail(FromEmailAddress, gifter.GetAttributeValue(emailAttrName), EmailSubjectLine, body);
-                        if (!success) LogToConsole("Failed to send email to User with id " + gifter.GetAttributeValue(idAttrName) + "for user with id " + user.GetAttributeValue(idAttrName));
+                        if (!success) LogToConsole("Failed to send email to user with id " + gifter.GetAttributeValue(idAttrName) + " for user with id " + user.GetAttributeValue(idAttrName));
                     } 
                     else
                     {
@@ -65,6 +68,7 @@ namespace MtgSecretSantaNotifier
                 using(var csv = new CsvHelper.CsvReader(File.OpenText(filename)))
                 {
                     csv.Configuration.HasHeaderRecord = true;
+                    csv.Configuration.Delimiter = "\t";
 
                     while(csv.Read())
                     {
@@ -72,10 +76,11 @@ namespace MtgSecretSantaNotifier
                         // Build our header list
                         if (rows == 1)
                         {
-                            var columnIndex = 1;
-                            while (csv.GetField(columnIndex) != "")
+                            var columnIndex = 0;
+                            string columnValue = null;
+                            while (csv.TryGetField<string>(columnIndex, out columnValue))
                             {
-                                xlsService.AddColumn(new Attribute(csv.GetField(columnIndex), columnIndex));
+                                xlsService.AddColumn(columnValue, columnIndex);
                                 columnIndex++;
                             }
                             continue;
@@ -100,15 +105,25 @@ namespace MtgSecretSantaNotifier
         /// <summary>
         /// Builds the body of the email to be sent to the Gifter
         /// </summary>
-        /// <param name="giftee">The person who will receive the gift</param>
+        /// <param name="giftee">The user who will receive the gift</param>
+        /// <param name="gifter">The user who will be sending the gift</param>
         /// <returns></returns>
-        private static string buildMessageBody(User giftee)
+        private static string buildMessageBody(User giftee, User gifter)
         {
-            string body = ConfigurationManager.AppSettings["EmailBodyTemplate"];
+            string bodyFile = ConfigurationManager.AppSettings["EmailBodyTemplateFile"];
+
+            if (!File.Exists(bodyFile))
+            {
+                throw new Exception("Email Body file not found");
+            }
+
+            string body = File.ReadAllText(bodyFile);
             foreach(var attr in XlsService.instance.Columns)
             {
-                string searchPattern = "${" + attr.Name + "}";
-                body = body.Replace(searchPattern, giftee.GetAttributeValue(attr.Name));
+                string gifteeSearchPattern = "${giftee_" + attr.Name + "}";
+                body = body.Replace(gifteeSearchPattern, HttpUtility.HtmlEncode(giftee.GetAttributeValue(attr.Name)));
+                string gifterSearchPattern = "${gifter_" + attr.Name + "}";
+                body = body.Replace(gifterSearchPattern, HttpUtility.HtmlEncode(gifter.GetAttributeValue(attr.Name)));
             }
             return body;
         }
@@ -126,6 +141,7 @@ namespace MtgSecretSantaNotifier
             try
             {
                 var message = new MailMessage(from, to);
+                //message.BodyEncoding = Encoding.Unicode;
                 message.Subject = subject;
                 message.Body = body;
                 message.IsBodyHtml = true;

@@ -9,7 +9,7 @@ namespace MtgSecretSantaNotifier
 {
     class XlsService
     {
-        private readonly string idAttrName = ConfigurationManager.AppSettings["AttributeNameToUseAsId"];
+        private readonly string idAttrName = ConfigurationManager.AppSettings["AttributeNameForId"];
         private static XlsService _instance = null;
         public static XlsService instance { 
             get {
@@ -38,7 +38,7 @@ namespace MtgSecretSantaNotifier
             Users.Add(user);
         }
 
-        public User GetGifter(string id)
+        public User GetUserById(string id)
         {
             foreach(User user in Users)
             {

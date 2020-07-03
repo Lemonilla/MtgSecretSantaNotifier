@@ -1,0 +1,16 @@
+﻿<div>
+      <div>
+            Hi, welcome to the summer exchange /u/${gifter_RedditName}! Here's your info: <a href="https://www.reddit.com/user/${giftee_RedditName}">/u/${gifee_RedditName}</a><br />
+            <br />
+            Mailing address is:
+            <p>
+                  ${gifee_Name}<br />
+                  ${gifee_Address}<br />
+                  ${gifee_City}, ${State}<br />
+                  ${gifee_Zipcode}<br />
+                  ${gifee_Country}<br />
+                  <br />
+                  Email: ${gifee_Email}
+            </p>
+      </div>
+</div>
