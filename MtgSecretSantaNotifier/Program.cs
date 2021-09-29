@@ -163,7 +163,8 @@ namespace MtgSecretSantaNotifier
         {
             Console.WriteLine(message);
             var dateString = DateTime.Now.Year.ToString("N2") + DateTime.Now.Month.ToString("N2") + DateTime.Now.Day.ToString("N2");
-            var logFileName = ConfigurationManager.AppSettings["LogFileNamePrefix"] + "_" + dateString + ".txt"; 
+            var logFileName = ConfigurationManager.AppSettings["LogFileNamePrefix"] + "_" + dateString + ".txt";
+
             try
             {
                 using (var log = File.AppendText(logFileName))

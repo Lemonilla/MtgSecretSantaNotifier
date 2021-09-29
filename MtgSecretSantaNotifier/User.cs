@@ -11,11 +11,7 @@ namespace MtgSecretSantaNotifier
         public List<Attribute> Attributes = new List<Attribute>();
         public string GetAttributeValue(string attrName)
         {
-            foreach (var attr in Attributes)
-            {
-                if (attr.Name == attrName) return attr.Value;
-            }
-            return null;
+            return Attributes.FirstOrDefault(x => x.Name == attrName)?.Value;
         }
     }
 }

@@ -40,11 +40,7 @@ namespace MtgSecretSantaNotifier
 
         public User GetUserById(string id)
         {
-            foreach(User user in Users)
-            {
-                if (user.GetAttributeValue(idAttrName) == id) return user;
-            }
-            return null;
+            return Users.FirstOrDefault(x => x.GetAttributeValue(idAttrName) == id);
         }
     }
 }
